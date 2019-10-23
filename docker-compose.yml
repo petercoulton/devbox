@@ -21,7 +21,7 @@ services:
       - portainer_data:/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`portainer.box`)"
+      - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_DOMAIN}`)"
       - "traefik.http.routers.portainer.entrypoints=web"
 
   dnsmasq:
@@ -31,11 +31,11 @@ services:
       - 53:53/udp
       - 5380:8080
     environment:
-      HTTP_USER: foo
-      HTTP_PASS: bar
+      HTTP_USER: ${DNSMASQ_USER}
+      HTTP_PASS: ${DNSMASQ_PASSWORD}
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dnsmasq.rule=Host(`dns.box`)"
+      - "traefik.http.routers.dnsmasq.rule=Host(`${DNSMASQ_DOMAIN}`)"
       - "traefik.http.services.dnsmasq.loadbalancer.server.port=8080"
       - "traefik.http.routers.dnsmasq.entrypoints=web"
     volumes:

@@ -22,6 +22,7 @@
 + https://github.com/jpillora/docker-dnsmasq
   + Uses [webproc](https://github.com/jpillora/webproc) to make 
     the `dnsmasq` config editable via a web app.
++ https://blog.agchapman.com/using-variables-in-docker-compose-files/
 
 ### Other interesting links
 
