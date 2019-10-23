@@ -1,0 +1,46 @@
+version: "2"
+
+services:
+  traefik:
+    image: "traefik"
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--log.level=DEBUG"
+    ports:
+      - "80:80"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  portainer:
+    image: portainer/portainer
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.box`)"
+      - "traefik.http.routers.portainer.entrypoints=web"
+
+  dnsmasq:
+    image: jpillora/dnsmasq
+    restart: always
+    ports:
+      - 53:53/udp
+      - 5380:8080
+    environment:
+      HTTP_USER: foo
+      HTTP_PASS: bar
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dnsmasq.rule=Host(`dns.box`)"
+      - "traefik.http.services.dnsmasq.loadbalancer.server.port=8080"
+      - "traefik.http.routers.dnsmasq.entrypoints=web"
+    volumes:
+      - ./dnsmasq/dnsmasq.conf:/etc/dnsmasq.conf
+      - ./dnsmasq/dnsmasq.d/:/etc/dnsmasq.d
+
+volumes:
+  portainer_data:
