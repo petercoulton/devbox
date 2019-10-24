@@ -14,6 +14,7 @@
 
 + [x] Add todo list
 + [ ] Add ssl
++ [ ] Capture access logs
 
 ## Bibliography
 
